@@ -38,23 +38,35 @@ This is a React Native application demonstrating Auth0 integration with iOS, fea
      export default config;
      ```
 
-4. **Update iOS configuration:**
+4. **Configure Android:**
+   - Open `android/app/build.gradle`
+   - Update line 83 with your Auth0 domain:
+     ```gradle
+     manifestPlaceholders = [auth0Domain: "your-domain.auth0.com", auth0Scheme: "${applicationId}.auth0"]
+     ```
+   - Replace `YOUR_AUTH0_DOMAIN` with your actual Auth0 domain (e.g., `financeapp.cic-demo-platform.auth0app.com`)
+
+5. **Configure iOS:**
    - Open `ios/Auth0Sample.xcodeproj/project.pbxproj`
-   - Update `DEVELOPMENT_TEAM` with your Apple Developer Team ID
+   - Update `DEVELOPMENT_TEAM` with your Apple Developer Team ID (search for `DEVELOPMENT_TEAM` and replace `Z52F7L33Y8`)
    - Update `PRODUCT_BUNDLE_IDENTIFIER` if needed
 
-5. **Configure Auth0 Dashboard:**
+6. **Configure Auth0 Dashboard:**
    Add these URLs to your Auth0 Application settings:
    
    **Allowed Callback URLs:**
    ```
-   com.auth0samples.auth0://YOUR_DOMAIN/ios/com.auth0samples/callback
+   com.auth0samples.auth0://YOUR_DOMAIN/ios/com.auth0samples/callback,
+   com.auth0samples.auth0://YOUR_DOMAIN/android/com.auth0samples/callback
    ```
    
    **Allowed Logout URLs:**
    ```
-   com.auth0samples.auth0://YOUR_DOMAIN/ios/com.auth0samples/callback
+   com.auth0samples.auth0://YOUR_DOMAIN/ios/com.auth0samples/callback,
+   com.auth0samples.auth0://YOUR_DOMAIN/android/com.auth0samples/callback
    ```
+   
+   Replace `YOUR_DOMAIN` with your actual Auth0 domain.
 
 ## Running the App
 
@@ -66,6 +78,11 @@ npx react-native run-ios
 **On iOS Device:**
 ```bash
 npx react-native run-ios --udid YOUR_DEVICE_UDID
+```
+
+**On Android Emulator or Device:**
+```bash
+npx react-native run-android
 ```
 
 ## Features
