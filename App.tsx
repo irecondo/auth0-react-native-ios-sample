@@ -8,7 +8,6 @@
 
 import React, { useState } from 'react';
 import {
-    Alert,
     Button,
     StyleSheet,
     Text,
@@ -26,12 +25,16 @@ interface UserInfo {
 }
 
 const App = () => {
+    // iOS: when using an ephemeral session for login there's no persistent browser
+    // session to clear, so we can skip the logout web call to avoid the consent popup.
+    const useEphemeralSession = true;
+
     let [accessToken, setAccessToken] = useState<string | null>(null);
     let [userInfo, setUserInfo] = useState<UserInfo | null>(null);
 
     const onLogin = () => {
         auth0.webAuth
-            .authorize({}, { ephemeralSession: true })
+            .authorize({}, { ephemeralSession: useEphemeralSession })
             .then(credentials => {
                 setAccessToken(credentials.accessToken);
                 // Get user info from the ID token
@@ -44,10 +47,16 @@ const App = () => {
     };
 
     const onLogout = () => {
+        if (useEphemeralSession) {
+            // No server-side session exists, so just clear local state
+            setAccessToken(null);
+            setUserInfo(null);
+            return;
+        }
+
         auth0.webAuth
             .clearSession({})
             .then(() => {
-                Alert.alert('Logged out!');
                 setAccessToken(null);
                 setUserInfo(null);
             })
